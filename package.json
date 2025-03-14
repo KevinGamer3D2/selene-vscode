@@ -6,9 +6,6 @@
     "publisher": "kevingamer3d2",
     "repository": "https://github.com/KevinGamer3D2/selene-vscode",
     "license": "MPL-2.0",
-    "engines": {
-        "vscode": "^1.63.0"
-    },
     "categories": [
         "Linters"
     ],
@@ -116,8 +113,6 @@
         "fs-write-stream-atomic": "^1.0.10",
         "glob": "^11.0.1",
         "micromatch": "^4.0.8",
-        "request": "^2.88.2",
-        "request-promise-native": "^1.0.9",
         "semver": "^7.7.1",
         "toml": "^3.0.0",
         "unzipper": "^0.12.3"

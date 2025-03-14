@@ -43,9 +43,8 @@ export function processDiagnostic(
                 let configContents: Uint8Array
 
                 try {
-                    configContents = await vscode.workspace.fs.readFile(
-                        configFilename,
-                    )
+                    configContents =
+                        await vscode.workspace.fs.readFile(configFilename)
                 } catch (error) {
                     if (
                         error instanceof vscode.FileSystemError &&
