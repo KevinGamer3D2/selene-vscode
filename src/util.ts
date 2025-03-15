@@ -1,9 +1,9 @@
 import * as os from "os"
 import * as selene from "./selene"
+import * as requestNative from "request"
+import * as request from "request-promise-native"
 import * as unzip from "unzipper"
 import * as vscode from "vscode"
-import got = require("got")
-import { get } from "https"
 
 import fsWriteFileAtomic = require("fs-write-stream-atomic")
 
@@ -18,22 +18,20 @@ interface GithubRelease {
     tag_name: string
 }
 
-let getLatestSeleneReleasePromise: Promise<GithubRelease> | undefined
+let getLatestSeleneReleasePromise: Promise<GithubRelease>
 
 export async function getLatestSeleneRelease(): Promise<GithubRelease> {
     if (getLatestSeleneReleasePromise) {
         return getLatestSeleneReleasePromise
     }
 
-    return got
-        .get(GITHUB_RELEASES, {
-            headers: {
-                "User-Agent": "selene-vscode",
-            },
-        })
-        .then((body) => {
-            return JSON.parse(body.body) as GithubRelease
-        })
+    return request(GITHUB_RELEASES, {
+        headers: {
+            "User-Agent": "selene-vscode",
+        },
+    }).then((body) => {
+        return JSON.parse(body) as GithubRelease
+    })
 }
 
 export function platformIsSupported(): boolean {
@@ -108,7 +106,7 @@ export async function downloadSelene(directory: vscode.Uri): Promise<void> {
             )
 
             return new Promise((resolve, reject) => {
-                get(asset.browser_download_url, {
+                requestNative(asset.browser_download_url, {
                     headers: {
                         "User-Agent": "selene-vscode",
                     },

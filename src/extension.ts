@@ -161,36 +161,39 @@ export async function activate(
         }
 
         const configPath = path.join(workspaceRoot, "selene.toml")
-        let config: selene.Config = {}
+        let config: selene.Config | undefined = {}
         try {
             const configFileContent = fs.readFileSync(configPath, "utf-8")
             config = toml.parse(configFileContent)
         } catch (error) {
-            console.error(`Error parsing config file: ${error}`)
-            return
+            config = undefined
         }
 
-        // We don't invoke selene on the files directly as it won't work on unsaved changes, so we
-        // need to check for exclude paths separately
-        const shouldExclude = (config.exclude || []).some((pattern: string) => {
-            // Document path given is absolute so the patterns should be as well
-            // If multiple `selene.toml` becomes supported, this will likely need to be changed to support it.
-            const excludeGlobAbsolute = path.isAbsolute(pattern)
-                ? pattern
-                : path.join(workspaceRoot, pattern)
+        if (config) {
+            // We don't invoke selene on the files directly as it won't work on unsaved changes, so we
+            // need to check for exclude paths separately
+            const shouldExclude = (config.exclude || []).some(
+                (pattern: string) => {
+                    // Document path given is absolute so the patterns should be as well
+                    // If multiple `selene.toml` becomes supported, this will likely need to be changed to support it.
+                    const excludeGlobAbsolute = path.isAbsolute(pattern)
+                        ? pattern
+                        : path.join(workspaceRoot, pattern)
 
-            return micromatch.isMatch(
-                document.uri.fsPath.replace(/\\/g, "/"),
-                excludeGlobAbsolute.replace(/\\/g, "/"),
-                {
-                    bash: true,
+                    return micromatch.isMatch(
+                        document.uri.fsPath.replace(/\\/g, "/"),
+                        excludeGlobAbsolute.replace(/\\/g, "/"),
+                        {
+                            bash: true,
+                        },
+                    )
                 },
             )
-        })
 
-        if (shouldExclude) {
-            diagnosticsCollection.delete(document.uri)
-            return
+            if (shouldExclude) {
+                diagnosticsCollection.delete(document.uri)
+                return
+            }
         }
 
         const output = await selene.seleneCommand(
