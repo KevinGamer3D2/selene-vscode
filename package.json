@@ -9,13 +9,13 @@
     "categories": [
         "Linters"
     ],
+    "engines": {
+        "vscode": "^1.98.0"
+    },
     "activationEvents": [
         "onLanguage:lua",
         "onLanguage:luau",
-        "workspaceContains:selene.toml",
-        "onCommand:selene.reinstall",
-        "onCommand:selene.update-roblox-std",
-        "onCommand:selene.generate-roblox-std"
+        "workspaceContains:selene.toml"
     ],
     "main": "./out/extension.js",
     "scripts": {
@@ -91,11 +91,10 @@
     },
     "devDependencies": {
         "@types/glob": "^8.1.0",
+        "@types/got": "^9.6.12",
         "@types/micromatch": "^4.0.9",
         "@types/mocha": "^10.0.10",
         "@types/node": "^22.13.10",
-        "@types/request": "^2.48.12",
-        "@types/request-promise-native": "^1.0.21",
         "@types/semver": "^7.5.8",
         "@types/unzipper": "^0.10.11",
         "@types/vscode": "^1.98.0",
@@ -112,6 +111,7 @@
     "dependencies": {
         "fs-write-stream-atomic": "^1.0.10",
         "glob": "^11.0.1",
+        "got": "^14.4.6",
         "micromatch": "^4.0.8",
         "semver": "^7.7.1",
         "toml": "^3.0.0",
